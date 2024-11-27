@@ -10,7 +10,9 @@ import pyautogui
 import pandas as pd
 import os
 
-file_path = 'E:/Python/Bot Tele/Hotmail.xlsx'
+file_path = 'E:/Python/TiktokAcount.xlsx'
+
+CHROME_DRIVER_PATH = 'E:/Python/chromedriver.exe'
 
 FULL_PATH_BT_LOGIN = '/html/body/div[1]/div[2]/div[1]/div/div[3]/div[2]/button'
 
@@ -52,9 +54,24 @@ def setup_driver(chrome_path):
         print(f"Error initializing ChromeDriver: {e}")
         sys.exit(1)  # Exit if the driver setup fails
 
-def login_account():
-    
-    # time.sleep(3000)
+def handle_login_account(email, password):
+
+    chrome_options = Options()
+    chrome_options.add_argument("--start-maximized")
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+
+    service = Service(CHROME_DRIVER_PATH)  # Change this to the path of your ChromeDriver
+    driver = webdriver.Chrome(service=service, options=chrome_options)
+
+    driver.get("https://www.tiktok.com/")
+    print("Navigated to TikTok.")
+
+    time.sleep(7)  # Wait for the page to load
+    pyautogui.press('tab')
+    pyautogui.press('enter')
+
 
     print(FULL_PATH_BT_LOGIN)
     driver.find_element(By.XPATH,FULL_PATH_BT_LOGIN).click()
@@ -69,45 +86,48 @@ def login_account():
     time.sleep(1)
 
     print(FULL_PATH_IP_EMAIL) 
-    driver.find_element(By.XPATH,FULL_PATH_IP_EMAIL).send_keys('user25765839695551')
+    driver.find_element(By.XPATH,FULL_PATH_IP_EMAIL).send_keys(email)
     time.sleep(1)
 
     print(FULL_PATH_IP_PASSWORD)
-    driver.find_element(By.XPATH,FULL_PATH_IP_PASSWORD).send_keys('@K4I060Ckd395')
+    driver.find_element(By.XPATH,FULL_PATH_IP_PASSWORD).send_keys(password)
     time.sleep(1)
 
     print(FULL_PATH_BT_LOGIN_SUBMIT)
     driver.find_element(By.XPATH,FULL_PATH_BT_LOGIN_SUBMIT).click()
     time.sleep(1)
-
     
+def handle_login_multi_account(email_list):
+    for email in email_list:
+        handle_login_account(email[0], email[1].strip())
 
 if __name__ == "__main__":
-    CHROME_DRIVER_PATH = 'E:/Python/chromedriver.exe'
-    # driver = setup_driver(CHROME_DRIVER_PATH)
-
-    chrome_options = Options()
-    chrome_options.add_argument("--start-maximized")
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
+    # chrome_options = Options()
+    # chrome_options.add_argument("--start-maximized")
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.add_argument('--disable-dev-shm-usage')
     # chrome_options.add_argument("--headless")
 
-    service = Service(CHROME_DRIVER_PATH)  # Change this to the path of your ChromeDriver
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # service = Service(CHROME_DRIVER_PATH)  # Change this to the path of your ChromeDriver
+    # driver = webdriver.Chrome(service=service, options=chrome_options)
     try:
-        driver.get("https://www.tiktok.com/")
-        print("Navigated to TikTok.")
+        # driver.get("https://www.tiktok.com/")
+        # print("Navigated to TikTok.")
 
-        time.sleep(7)  # Wait for the page to load
-        pyautogui.press('tab')
-        pyautogui.press('enter')
+        # time.sleep(7)  # Wait for the page to load
+        # pyautogui.press('tab')
+        # pyautogui.press('enter')
 
-        login_account() 
+        email_list =  read_email_list_from_excel(file_path)
+        
+        handle_login_multi_account(email_list)
+
+        # login_account() 
 
         # Wait for 'q' keypress to quit
         wait_for_keypress('q')
 
     finally:
-        driver.quit()
+        # driver.quit()
         print("Browser closed.")
