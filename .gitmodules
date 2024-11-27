@@ -1,0 +1,12 @@
+[submodule "2048-Python-Bot"]
+	path = 2048-Python-Bot
+	url = https://github.com/thefuture29x/Python
+[submodule "Bot Tele"]
+	path = Bot Tele
+	url = https://github.com/thefuture29x/Python
+[submodule "My Wall-E"]
+	path = My Wall-E
+	url = https://github.com/thefuture29x/Python
+[submodule "OpenAI/openai-quickstart-python"]
+	path = OpenAI/openai-quickstart-python
+	url = https://github.com/thefuture29x/Python
